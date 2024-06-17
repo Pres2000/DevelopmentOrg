@@ -1,5 +1,4 @@
 public virtual class TriggerHandler {
-
   // static map of handlername, times run() was invoked
   private static Map<String, LoopCount> loopCountMap;
   private static Set<String> bypassedHandlers;
@@ -29,8 +28,7 @@ public virtual class TriggerHandler {
 
   // main method that will be called during execution
   public void run() {
-
-    if(!validateRun()) {
+    if (!validateRun()) {
       return;
     }
 
@@ -64,7 +62,7 @@ public virtual class TriggerHandler {
 
   public void setMaxLoopCount(Integer max) {
     String handlerName = getHandlerName();
-    if(!TriggerHandler.loopCountMap.containsKey(handlerName)) {
+    if (!TriggerHandler.loopCountMap.containsKey(handlerName)) {
       TriggerHandler.loopCountMap.put(handlerName, new LoopCount(max));
     } else {
       TriggerHandler.loopCountMap.get(handlerName).setMax(max);
@@ -106,33 +104,54 @@ public virtual class TriggerHandler {
 
   @TestVisible
   private void setTriggerContext(String ctx, Boolean testMode) {
-    if(!Trigger.isExecuting && !testMode) {
+    if (!Trigger.isExecuting && !testMode) {
       this.isTriggerExecuting = false;
       return;
     } else {
       this.isTriggerExecuting = true;
     }
 
-    if((Trigger.isExecuting && Trigger.isBefore && Trigger.isInsert) ||
-        (ctx != null && ctx == 'before insert')) {
+    if (
+      (Trigger.isExecuting && Trigger.isBefore && Trigger.isInsert) ||
+      (ctx != null &&
+      ctx == 'before insert')
+    ) {
       this.context = TriggerContext.BEFORE_INSERT;
-    } else if((Trigger.isExecuting && Trigger.isBefore && Trigger.isUpdate) ||
-        (ctx != null && ctx == 'before update')){
+    } else if (
+      (Trigger.isExecuting && Trigger.isBefore && Trigger.isUpdate) ||
+      (ctx != null &&
+      ctx == 'before update')
+    ) {
       this.context = TriggerContext.BEFORE_UPDATE;
-    } else if((Trigger.isExecuting && Trigger.isBefore && Trigger.isDelete) ||
-        (ctx != null && ctx == 'before delete')) {
+    } else if (
+      (Trigger.isExecuting && Trigger.isBefore && Trigger.isDelete) ||
+      (ctx != null &&
+      ctx == 'before delete')
+    ) {
       this.context = TriggerContext.BEFORE_DELETE;
-    } else if((Trigger.isExecuting && Trigger.isAfter && Trigger.isInsert) ||
-        (ctx != null && ctx == 'after insert')) {
+    } else if (
+      (Trigger.isExecuting && Trigger.isAfter && Trigger.isInsert) ||
+      (ctx != null &&
+      ctx == 'after insert')
+    ) {
       this.context = TriggerContext.AFTER_INSERT;
-    } else if((Trigger.isExecuting && Trigger.isAfter && Trigger.isUpdate) ||
-        (ctx != null && ctx == 'after update')) {
+    } else if (
+      (Trigger.isExecuting && Trigger.isAfter && Trigger.isUpdate) ||
+      (ctx != null &&
+      ctx == 'after update')
+    ) {
       this.context = TriggerContext.AFTER_UPDATE;
-    } else if((Trigger.isExecuting && Trigger.isAfter && Trigger.isDelete) ||
-        (ctx != null && ctx == 'after delete')) {
+    } else if (
+      (Trigger.isExecuting && Trigger.isAfter && Trigger.isDelete) ||
+      (ctx != null &&
+      ctx == 'after delete')
+    ) {
       this.context = TriggerContext.AFTER_DELETE;
-    } else if((Trigger.isExecuting && Trigger.isAfter && Trigger.isUndelete) ||
-        (ctx != null && ctx == 'after undelete')) {
+    } else if (
+      (Trigger.isExecuting && Trigger.isAfter && Trigger.isUndelete) ||
+      (ctx != null &&
+      ctx == 'after undelete')
+    ) {
       this.context = TriggerContext.AFTER_UNDELETE;
     }
   }
@@ -141,11 +160,17 @@ public virtual class TriggerHandler {
   @TestVisible
   private void addToLoopCount() {
     String handlerName = getHandlerName();
-    if(TriggerHandler.loopCountMap.containsKey(handlerName)) {
-      Boolean exceeded = TriggerHandler.loopCountMap.get(handlerName).increment();
-      if(exceeded) {
+    if (TriggerHandler.loopCountMap.containsKey(handlerName)) {
+      Boolean exceeded = TriggerHandler.loopCountMap.get(handlerName)
+        .increment();
+      if (exceeded) {
         Integer max = TriggerHandler.loopCountMap.get(handlerName).max;
-        throw new TriggerHandlerException('Maximum loop count of ' + String.valueOf(max) + ' reached in ' + handlerName);
+        throw new TriggerHandlerException(
+          'Maximum loop count of ' +
+            String.valueOf(max) +
+            ' reached in ' +
+            handlerName
+        );
       }
     }
   }
@@ -153,8 +178,10 @@ public virtual class TriggerHandler {
   // make sure this trigger should continue to run
   @TestVisible
   private Boolean validateRun() {
-    if(!this.isTriggerExecuting || this.context == null) {
-      throw new TriggerHandlerException('Trigger handler called outside of Trigger execution');
+    if (!this.isTriggerExecuting || this.context == null) {
+      throw new TriggerHandlerException(
+        'Trigger handler called outside of Trigger execution'
+      );
     }
     return !TriggerHandler.bypassedHandlers.contains(getHandlerName());
   }
@@ -170,19 +197,26 @@ public virtual class TriggerHandler {
 
   // context-specific methods for override
   @TestVisible
-  protected virtual void beforeInsert(){}
+  protected virtual void beforeInsert() {
+  }
   @TestVisible
-  protected virtual void beforeUpdate(){}
+  protected virtual void beforeUpdate() {
+  }
   @TestVisible
-  protected virtual void beforeDelete(){}
+  protected virtual void beforeDelete() {
+  }
   @TestVisible
-  protected virtual void afterInsert(){}
+  protected virtual void afterInsert() {
+  }
   @TestVisible
-  protected virtual void afterUpdate(){}
+  protected virtual void afterUpdate() {
+  }
   @TestVisible
-  protected virtual void afterDelete(){}
+  protected virtual void afterDelete() {
+  }
   @TestVisible
-  protected virtual void afterUndelete(){}
+  protected virtual void afterUndelete() {
+  }
 
   /***************************************
    * inner classes
@@ -229,12 +263,16 @@ public virtual class TriggerHandler {
   // possible trigger contexts
   @TestVisible
   private enum TriggerContext {
-    BEFORE_INSERT, BEFORE_UPDATE, BEFORE_DELETE,
-    AFTER_INSERT, AFTER_UPDATE, AFTER_DELETE,
+    BEFORE_INSERT,
+    BEFORE_UPDATE,
+    BEFORE_DELETE,
+    AFTER_INSERT,
+    AFTER_UPDATE,
+    AFTER_DELETE,
     AFTER_UNDELETE
   }
 
   // exception class
-  public class TriggerHandlerException extends Exception {}
-
+  public class TriggerHandlerException extends Exception {
+  }
 }
